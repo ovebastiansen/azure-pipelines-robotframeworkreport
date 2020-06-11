@@ -6,13 +6,13 @@ const hat = require('hat')
 const dashify = require('dashify')
 
 function uploadScreenshots (reportDirPath) {
-  const files = globby.sync([`${reportDirPath.replace(/\\/g, '/')}/screenshots`], {expandDirectories: { extensions: ['png'], files: [ '*' ]}})
+  const files = globby.sync([`${reportDirPath.replace(/\\/g, '/')}`], {expandDirectories: { extensions: ['png'], files: [ '*' ]}})
   files.forEach(file => {
       const screenshotProperties = {
         name: path.basename(file),
         type: 'robotframework.screenshot'
       }
-
+      tl.debug("screenshot: " + file)
       tl.command('task.addattachment', screenshotProperties, file)
   })
 }
@@ -31,9 +31,23 @@ function uploadResultsJson (reportDirPath) {
 
     const combinedPath = path.join(reportDirPath, 'report.html')
     if (fs.existsSync(combinedPath)) {
+      tl.debug("adding report " + combinedPath)
       tl.command('task.addattachment', properties, combinedPath)
     } else {
       throw new Error('Could not find report file ' + combinedPath)
+    }
+    const uniqueLogId = hat()
+    const logProperties = {
+      name:  `${tabName}.${jobName}.${stageName}.${stageAttempt}.${uniqueLogId}`,
+      type: 'robotframework.log'
+    }
+
+    const combinedLogPath = path.join(reportDirPath, 'log.html')
+    if (fs.existsSync(combinedLogPath)) {
+      tl.debug("adding log " + combinedLogPath)
+      tl.command('task.addattachment', logProperties, combinedLogPath)
+    } else {
+      throw new Error('Could not find log file ' + combinedLogPath)
     }
 }
 

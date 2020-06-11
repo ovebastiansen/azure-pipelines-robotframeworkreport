@@ -1,6 +1,6 @@
 {
   "name": "buildandreleasetask",
-  "version": "0.1.4",
+  "version": "0.1.14",
   "description": "",
   "main": "index.js",
   "scripts": {

@@ -5,7 +5,7 @@
     "publisher": "EngineeringAgility",
     "public": false,
     "author": "Ove Bastiansen",
-    "version": "0.1.4",
+    "version": "0.1.14",
     "description": "Embed Robotframework HTML report in Azure Pipelines",
     "galleryFlags": [
       "Preview"
