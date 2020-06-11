@@ -16,7 +16,6 @@ import { Observer } from "azure-devops-ui/Observer"
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs"
 
 const ATTACHMENT_TYPE = "robotframework.report";
-const ATTACHMENT_LOG_TYPE = "robotframework.log";
 const SCREENSHOT_ATTACHMENT_TYPE = "robotframework.screenshot";
 const OUR_TASK_IDS = [
   "",
@@ -128,8 +127,8 @@ export default class TaskAttachmentPanel extends React.Component<TaskAttachmentP
       for (const attachment of attachments) {
         const metadata = attachment.name.split('.')
         // Conditionally add counter for multistage pipeline
-        const name = metadata[2] !== '__default' ? `${metadata[0]} #${metadata[3]}` : metadata[0]
-        console.log(name)
+        const name = metadata[2] !== '__default' ? `${metadata[2]} #${metadata[4]}` : `${metadata[1]} #${metadata[4]}`
+        console.log(metadata)
         tabs.push(<Tab name={name} id={attachment.name} key={attachment.name} url={attachment._links.self.href}/>)
         this.tabContents.add(attachment.name, this.tabInitialContent)
       }
@@ -173,14 +172,6 @@ abstract class AttachmentClient {
   protected appJsContent: string = undefined
   constructor() {}
 
-  async loadReportTemplates() {
-    // console.log('Get report templates')
-    // const response = await fetch('./report.html')
-    // this.reportHtmlContent = await response.text()
-    // const appJs = await fetch('./app.js')
-    // this.appJsContent = await appJs.text()
-  }
-
   // Retrieve attachments and attachment contents from AzDO
   abstract async init(): Promise<void>
 
@@ -215,7 +206,6 @@ abstract class AttachmentClient {
     
     setText('Processing Report File')
     var responseText = await response.text()
-    //console.log(responseText)
 
     const screenshots = await this.getScreenshotAttachments()
     if (screenshots.length > 0) {
@@ -223,32 +213,14 @@ abstract class AttachmentClient {
       screenshots.forEach(screenshot => {
         var orgLink = "<img src=\\\"" + screenshot.name;
         var newLink = "<img src=\\\"" + screenshot._links.self.href;
-        //var found = responseText.indexOf(orgLink);
-        //console.log("found image src " + found);
         responseText = responseText.replace(orgLink, newLink);
 
         var orgHref = "<a href=\\\"" + screenshot.name;
         var newHref = "<a href=\\\"" + screenshot._links.self.href;
-
-        //var found = responseText.indexOf(orgLink);
-        //console.log("found image src " + found);
         responseText = responseText.replace(orgHref, newHref);
-
-        //const tc = responseText.find((x) => x.screenShotFile.includes(screenshot.name))
-        //if (tc) {
-        //  tc.screenShotFile = screenshot._links.self.href
-        //}
       })
     }
-    //console.log(responseText)
     
-
-    // const contentJSON = JSON.parse(JSON.parse(responseText))
-    
-    // mustache.tags =  [ '<%', '%>' ];
-    // mustache.escape = function(text) { return text }
-    // const renderedApp = mustache.render(this.appJsContent, {resultJSON: JSON.stringify(contentJSON)})
-    // const renderedReportHtml = mustache.render(this.reportHtmlContent, { appJsScript: renderedApp })
     return responseText
   }
 }
@@ -262,12 +234,11 @@ class BuildAttachmentClient extends AttachmentClient {
   }
 
   public async init() {
-    //await this.loadReportTemplates()
     console.log('Get attachment list')
     const buildClient: BuildRestClient = getClient(BuildRestClient)
-    var reportattachments = await buildClient.getAttachments(this.build.project.id, this.build.id, ATTACHMENT_TYPE)
-    var logattachments = await buildClient.getAttachments(this.build.project.id, this.build.id, ATTACHMENT_LOG_TYPE)
-    this.attachments = reportattachments.concat(logattachments);
+    this.attachments = await buildClient.getAttachments(this.build.project.id, this.build.id, ATTACHMENT_TYPE)
+    // var logattachments = await buildClient.getAttachments(this.build.project.id, this.build.id, ATTACHMENT_LOG_TYPE)
+    // this.attachments = reportattachments.concat(logattachments);
   }
 
   public async getScreenshotAttachments(): Promise<Attachment[]> {
@@ -289,7 +260,6 @@ class ReleaseAttachmentClient extends AttachmentClient {
   }
 
   public async init() {
-    await this.loadReportTemplates()
     const releaseId = this.releaseEnvironment.releaseId
     const environmentId = this.releaseEnvironment.id
     console.log('Get project')

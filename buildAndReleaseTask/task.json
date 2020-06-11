@@ -14,25 +14,41 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 14
+        "Patch": 20
     },
     "instanceNameFormat": "Upload Robotframework Html Report",
     "inputs": [
         {
-        "name": "cwd",
-        "type": "filePath",
-        "label": "Report Path",
-        "defaultValue": "$(System.DefaultWorkingDirectory)",
-        "required": true,
-        "helpMarkDown": "Directory where html report files are stored"
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Report Path",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": true,
+            "helpMarkDown": "Directory where html report files are stored"
         },
         {
-        "name": "tabName",
-        "type": "string",
-        "label": "Report tab name",
-        "defaultValue": "RobotFramework",
-        "required": false,
-        "helpMarkDown": "Name of the tab displayed in the report"
+            "name": "tabName",
+            "type": "string",
+            "label": "Report tab name",
+            "defaultValue": "RobotFramework",
+            "required": false,
+            "helpMarkDown": "Name of the tab displayed in the report"
+        },
+        {
+            "name": "reportFileName",
+            "type": "string",
+            "label": "Report tab name",
+            "defaultValue": "report.html",
+            "required": false,
+            "helpMarkDown": "FileName of the report"
+        },
+        {
+            "name": "logFileName",
+            "type": "string",
+            "label": "Report tab name",
+            "defaultValue": "log.html",
+            "required": false,
+            "helpMarkDown": "FileName of the log"
         }
     ],
     "execution": {
