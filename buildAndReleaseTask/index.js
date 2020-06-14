@@ -29,11 +29,11 @@ function uploadResultsJson (reportDirPath) {
       type: 'robotframework.report'
     }
 
-    const combinedPath = path.join(reportDirPath, 'combined.json')
+    const combinedPath = path.join(reportDirPath, 'report.html')
     if (fs.existsSync(combinedPath)) {
       tl.command('task.addattachment', properties, combinedPath)
     } else {
-      throw new Error('Could not find report file')
+      throw new Error('Could not find report file ' + combinedPath)
     }
 }
 
