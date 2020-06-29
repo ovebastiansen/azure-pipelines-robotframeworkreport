@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-robotframeworkreport",
-  "version": "0.1.20",
+  "version": "0.1.28",
   "description": "Embed Robotframework HTML result into release and build tabs",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/ovebastiansen/azure-pipelines-robotframeworkreport#readme",
   "dependencies": {
+    "@types/es6-promise": "^3.3.0",
     "azure-devops-extension-api": "^1.157.0",
     "azure-devops-extension-sdk": "^2.0.11",
     "azure-devops-ui": "^2.165.1",
